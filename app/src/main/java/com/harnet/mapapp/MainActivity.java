@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements MapsFragment.OnMessageSendListener {
+public class MainActivity extends AppCompatActivity implements MapsFragment.OnMessageSendListener, MainFragment.OnMessageSendListener {
     private Fragment fragment;
     private Bundle exchangeBundle;
 
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements MapsFragment.OnMe
         if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmentContFrameLayout, new MapsFragment())
+                    .replace(R.id.fragmentContFrameLayout, new MainFragment())
                     .commit();
         }
     }
@@ -27,6 +27,12 @@ public class MainActivity extends AppCompatActivity implements MapsFragment.OnMe
     @Override
     public void onMessageSend(String message) {
         exchangeBundle.putString("message", message);
+        if(message.equals("Map")){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContFrameLayout, new MapsFragment())
+                    .commit();
+        }
 //        System.out.println(message);
     }
 }
