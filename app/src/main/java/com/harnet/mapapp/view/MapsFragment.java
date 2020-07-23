@@ -15,11 +15,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,7 +34,7 @@ import java.util.Objects;
 public class MapsFragment extends Fragment  {
     private OnMessageSendListener onMessageSendListener;
 
-    private MapController mapController = new MapController();
+    private MapController mapController;
     private PermissionController permissionController;
 
     private Marker marker = null;
@@ -48,7 +50,8 @@ public class MapsFragment extends Fragment  {
             googleMap.addMarker(new MarkerOptions().position(warsaw).title("Marker in Warsaw"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(warsaw));
             // set up the initial map
-            mapController.setGoogleMap(googleMap, warsaw);
+            mapController = new MapController(googleMap);
+            mapController.setGoogleMap(warsaw);
             permissionController.checkLocationPermission();
 
             locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
@@ -59,7 +62,7 @@ public class MapsFragment extends Fragment  {
                 @Override
                 public void onLocationChanged(Location location) {
                     Log.d("MapAppCheck", "onLocationChanged: " + location.toString());
-
+                    mapController.onPostExecute(location.getLatitude(), location.getLongitude());
                 }
 
                 @Override
@@ -77,7 +80,9 @@ public class MapsFragment extends Fragment  {
 
                 }
             };
+            // update coordinates
             locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
+
         }
     };
 
@@ -104,13 +109,9 @@ public class MapsFragment extends Fragment  {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.i("MapAppCheck", "onRequestPermissionsResult: ");
+//        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    //    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        Log.i("MapAppCheck", "onRequestPermissionsResult: ");
-//        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
 
     public interface OnMessageSendListener {
         public void onMessageSend(String message);
