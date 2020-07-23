@@ -25,7 +25,7 @@ public class MapsFragment extends Fragment {
     private OnMessageSendListener onMessageSendListener;
 
     private MapController mapController = new MapController();
-    private PermissionController permissionController = new PermissionController();
+    private PermissionController permissionController;
 
     private View mapView;
 
@@ -38,8 +38,7 @@ public class MapsFragment extends Fragment {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(warsaw));
             // set up the initial map
             mapController.setGoogleMap(googleMap, warsaw);
-
-            permissionController.checkLocationPermission(getContext(), getActivity());
+            permissionController.checkLocationPermission();
         }
     };
 
@@ -49,6 +48,7 @@ public class MapsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mapView = inflater.inflate(R.layout.fragment_maps, container, false);
+        permissionController = new PermissionController(getContext(), getActivity());
         return mapView;
     }
 
