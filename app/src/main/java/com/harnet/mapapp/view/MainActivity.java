@@ -1,9 +1,12 @@
-package com.harnet.mapapp;
+package com.harnet.mapapp.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+
+import com.harnet.mapapp.R;
+import com.harnet.mapapp.controller.PermissionController;
 
 public class MainActivity extends AppCompatActivity implements MapsFragment.OnMessageSendListener, MainFragment.OnMessageSendListener {
     private Fragment fragment;
@@ -33,6 +36,5 @@ public class MainActivity extends AppCompatActivity implements MapsFragment.OnMe
                     .replace(R.id.fragmentContFrameLayout, new MapsFragment())
                     .commit();
         }
-//        System.out.println(message);
     }
 }
