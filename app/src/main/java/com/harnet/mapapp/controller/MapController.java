@@ -13,4 +13,6 @@ public class MapController {
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cityCoord, mapScale));
     }
+
+
 }

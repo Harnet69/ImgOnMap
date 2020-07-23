@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -19,19 +21,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.harnet.mapapp.R;
 import com.harnet.mapapp.controller.MapController;
 import com.harnet.mapapp.controller.PermissionController;
 
-public class MapsFragment extends Fragment {
+import java.util.Objects;
+
+public class MapsFragment extends Fragment  {
     private OnMessageSendListener onMessageSendListener;
 
     private MapController mapController = new MapController();
     private PermissionController permissionController;
 
-    private View mapView;
-
+    private Marker marker = null;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private String provider;
@@ -47,6 +51,33 @@ public class MapsFragment extends Fragment {
             mapController.setGoogleMap(googleMap, warsaw);
             permissionController.checkLocationPermission();
 
+            locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
+            assert locationManager != null;
+            provider = locationManager.getBestProvider(new Criteria(), false);
+
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    Log.d("MapAppCheck", "onLocationChanged: " + location.toString());
+
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            };
+            locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
         }
     };
 
@@ -55,9 +86,8 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mapView = inflater.inflate(R.layout.fragment_maps, container, false);
         permissionController = new PermissionController(getContext(), getActivity());
-        return mapView;
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override
@@ -72,9 +102,15 @@ public class MapsFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.i("MapAppCheck", "onRequestPermissionsResult: ");
-        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+    //    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        Log.i("MapAppCheck", "onRequestPermissionsResult: ");
+//        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
 
     public interface OnMessageSendListener {
         public void onMessageSend(String message);
