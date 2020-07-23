@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,10 @@ public class MapsFragment extends Fragment {
 
     private View mapView;
 
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private String provider;
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @Override
@@ -39,6 +46,7 @@ public class MapsFragment extends Fragment {
             // set up the initial map
             mapController.setGoogleMap(googleMap, warsaw);
             permissionController.checkLocationPermission();
+
         }
     };
 
@@ -60,6 +68,12 @@ public class MapsFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i("MapAppCheck", "onRequestPermissionsResult: ");
+        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public interface OnMessageSendListener {
