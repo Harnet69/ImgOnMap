@@ -24,8 +24,10 @@ import com.harnet.mapapp.controller.PermissionController;
 public class MapsFragment extends Fragment {
     private OnMessageSendListener onMessageSendListener;
 
-    MapController mapController = new MapController();
-    PermissionController permissionController = new PermissionController();
+    private MapController mapController = new MapController();
+    private PermissionController permissionController = new PermissionController();
+
+    private View mapView;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -36,6 +38,8 @@ public class MapsFragment extends Fragment {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(warsaw));
             // set up the initial map
             mapController.setGoogleMap(googleMap, warsaw);
+
+            permissionController.checkLocationPermission(getContext(), getActivity());
         }
     };
 
@@ -44,7 +48,8 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+        mapView = inflater.inflate(R.layout.fragment_maps, container, false);
+        return mapView;
     }
 
     @Override
