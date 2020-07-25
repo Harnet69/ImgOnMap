@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
@@ -28,6 +29,8 @@ import com.harnet.mapapp.controller.PermissionController;
 
 import java.util.Objects;
 
+import static androidx.core.app.ActivityCompat.requestPermissions;
+
 public class MapsFragment extends Fragment  {
     private OnMessageSendListener onMessageSendListener;
 
@@ -47,7 +50,10 @@ public class MapsFragment extends Fragment  {
             // set up the initial map
             mapController = new MapController(googleMap);
             mapController.setGoogleMap(warsaw);
+            // check permissions
             permissionController.checkLocationPermission();
+            //request there for permission to avoid a bug when overrided onRequestPermissionsResult didn't call
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionController.MY_PERMISSIONS_REQUEST_LOCATION);
 
             locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
             assert locationManager != null;
@@ -98,6 +104,13 @@ public class MapsFragment extends Fragment  {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        Log.i("MapAppCheck", "onRequestPermissionsResult: ");
+        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public interface OnMessageSendListener {
