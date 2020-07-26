@@ -40,6 +40,8 @@ public class MapsFragment extends Fragment  {
     private LocationListener locationListener;
     private String provider;
 
+
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @Override
@@ -50,6 +52,7 @@ public class MapsFragment extends Fragment  {
             // set up the initial map
             mapController = new MapController(googleMap);
             mapController.setGoogleMap(warsaw);
+
             // check permissions
             permissionController.checkLocationPermission();
             //request there for permission to avoid a bug when overrided onRequestPermissionsResult didn't call
@@ -112,7 +115,7 @@ public class MapsFragment extends Fragment  {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 //        Log.i("MapAppCheck", "onRequestPermissionsResult: ");
-        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        permissionController.onRequestPermissionsResult(requestCode, grantResults, locationManager, locationListener, provider);
     }
 
     public interface OnMessageSendListener {
