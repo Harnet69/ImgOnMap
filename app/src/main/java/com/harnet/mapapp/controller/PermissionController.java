@@ -45,8 +45,7 @@ public class PermissionController {
                             && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
-                    //TODO update user location(you can define time or distance for saving battery life)
-                    // refresh activity after permission granted
+                    //TODO refresh activity after permission granted
 
                     Log.i("MapAppCheck", "onRequestPermissionsResult: Permission was granted");
 //                        mapActivity.finish();

@@ -82,7 +82,9 @@ public class MapsFragment extends Fragment  {
                 }
             };
             // update coordinates
-            locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
+            if(provider != null) {
+                locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
+            }
 
         }
     };
