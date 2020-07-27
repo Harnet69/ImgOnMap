@@ -21,15 +21,36 @@ import com.harnet.mapapp.view.MainActivity;
 import static androidx.core.app.ActivityCompat.requestPermissions;
 
 public class PermissionController {
+    private static PermissionController instance = null;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     private Context context;
     private Activity mapActivity;
 
-    public PermissionController(Context context, Activity mapActivity) {
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private String provider;
+
+    private PermissionController(Context context, Activity mapActivity, LocationManager locationManager,
+                                LocationListener locationListener, String provider) {
         this.context = context;
         this.mapActivity = mapActivity;
+        this.locationManager = locationManager;
+        this.locationListener = locationListener;
+        this.provider = provider;
     }
+
+    public static PermissionController getInstance(Context context, Activity mapActivity, LocationManager locationManager,
+                                LocationListener locationListener, String provider) {
+        if(instance == null){
+            instance = new PermissionController(context, mapActivity, locationManager, locationListener, provider);
+        }
+        return instance;
+    }
+    public static PermissionController getInstance() {
+        return instance;
+    }
+
     // check if permission have granted already, if didn't - asks for it
     public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -40,10 +61,15 @@ public class PermissionController {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                alertDialog();
+                if(!((Activity) context).isFinishing())
+                {
+                    //show dialog
+                    alertDialog();
+                }
             } else {
                 // No explanation needed, we can request the permission.
                 requestPermissions(mapActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionController.MY_PERMISSIONS_REQUEST_LOCATION);
+                Log.i("MapAppCheck", "checkLocationPermission: ask for permission");
             }
         }
     }
@@ -62,15 +88,18 @@ public class PermissionController {
                 .create()
                 .show();
     }
+    //TODO find where is the trigger of Permission granted
 
-    // work with the result of permission asking
-    public void onRequestPermissionsResult(int requestCode, @NonNull int[] grantResults, LocationManager locationManager,
-                                           LocationListener locationListener, String provider) {
+//    work with the result of permission asking
+    public void onRequestPermissionsResult(int requestCode, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(mapActivity, "Permission granted", Toast.LENGTH_LONG).show();
+
                     // permission was granted, yay!
                     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED
@@ -81,6 +110,7 @@ public class PermissionController {
                     // refresh activity after permission granted
 //                    finish();
 //                    startActivity(getIntent());
+
                     Log.i("MapAppCheck", "onRequestPermissionsResult: Refresh the page");
                     // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -94,11 +124,9 @@ public class PermissionController {
 //                    Intent mainActivityIntent = new Intent(this, MainActivity.class);
 //                    startActivity(mainActivityIntent);
                     Log.i("MapAppCheck", "onRequestPermissionsResult: Permission denied");
-                    Toast.makeText(context, "User location unknown", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "User location unknown", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }
-
 }

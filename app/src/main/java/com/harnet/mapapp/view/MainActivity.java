@@ -1,9 +1,11 @@
 package com.harnet.mapapp.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.harnet.mapapp.R;
 import com.harnet.mapapp.controller.PermissionController;
@@ -25,6 +27,16 @@ public class MainActivity extends AppCompatActivity implements MapsFragment.OnMe
                     .replace(R.id.fragmentContFrameLayout, new MainFragment())
                     .commit();
         }
+    }
+
+    // It's necessary to override method here to handle permission
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.i("MapAppCheck", "onRequestPermissionsResult: called from activity");
+        finish();
+        startActivity(getIntent());
+        PermissionController.getInstance().onRequestPermissionsResult(requestCode, grantResults);
     }
 
     @Override

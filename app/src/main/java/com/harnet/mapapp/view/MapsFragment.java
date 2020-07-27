@@ -56,7 +56,7 @@ public class MapsFragment extends Fragment  {
             // check permissions
             permissionController.checkLocationPermission();
             //request there for permission to avoid a bug when overrided onRequestPermissionsResult didn't call
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionController.MY_PERMISSIONS_REQUEST_LOCATION);
+//            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionController.MY_PERMISSIONS_REQUEST_LOCATION);
 
             locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
             assert locationManager != null;
@@ -97,7 +97,7 @@ public class MapsFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        permissionController = new PermissionController(getContext(), getActivity());
+        permissionController = PermissionController.getInstance(getContext(), getActivity(), locationManager, locationListener, provider);
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -111,12 +111,11 @@ public class MapsFragment extends Fragment  {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        Log.i("MapAppCheck", "onRequestPermissionsResult: ");
-        permissionController.onRequestPermissionsResult(requestCode, grantResults, locationManager, locationListener, provider);
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        permissionController.onRequestPermissionsResult(requestCode, grantResults);
+//    }
 
     public interface OnMessageSendListener {
         public void onMessageSend(String message);
