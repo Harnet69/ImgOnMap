@@ -55,12 +55,19 @@ public class MapsFragment extends Fragment  {
 
             // check permissions
             permissionController.checkLocationPermission();
-            //request there for permission to avoid a bug when overrided onRequestPermissionsResult didn't call
-//            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionController.MY_PERMISSIONS_REQUEST_LOCATION);
 
             locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
             assert locationManager != null;
             provider = locationManager.getBestProvider(new Criteria(), false);
+
+            if(provider != null){
+                Log.d("MapAppCheck", "onLocationChanged: Provider " + provider);
+                Location lastKnownLocation = locationManager.getLastKnownLocation(provider);
+
+                // set marker on last known location
+                assert lastKnownLocation != null;
+                mapController.onPostExecute(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            }
 
             locationListener = new LocationListener() {
                 @Override

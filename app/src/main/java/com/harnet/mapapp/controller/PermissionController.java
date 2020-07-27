@@ -32,7 +32,7 @@ public class PermissionController {
     private String provider;
 
     private PermissionController(Context context, Activity mapActivity, LocationManager locationManager,
-                                LocationListener locationListener, String provider) {
+                                 LocationListener locationListener, String provider) {
         this.context = context;
         this.mapActivity = mapActivity;
         this.locationManager = locationManager;
@@ -41,28 +41,28 @@ public class PermissionController {
     }
 
     public static PermissionController getInstance(Context context, Activity mapActivity, LocationManager locationManager,
-                                LocationListener locationListener, String provider) {
-        if(instance == null){
+                                                   LocationListener locationListener, String provider) {
+        if (instance == null) {
             instance = new PermissionController(context, mapActivity, locationManager, locationListener, provider);
         }
         return instance;
     }
+
     public static PermissionController getInstance() {
         return instance;
     }
 
     // check if permission have granted already, if didn't - asks for it
-    public void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        public void checkLocationPermission() {
+        // if user haven't given to us the permission
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(mapActivity,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                if(!((Activity) context).isFinishing())
-                {
+                if (!((Activity) context).isFinishing()) {
                     //show dialog
                     alertDialog();
                 }
@@ -74,7 +74,7 @@ public class PermissionController {
         }
     }
 
-    private void alertDialog(){
+    private void alertDialog() {
         new AlertDialog.Builder(context)
                 .setTitle("Location")
                 .setMessage("Give the permission")
@@ -90,7 +90,7 @@ public class PermissionController {
     }
     //TODO find where is the trigger of Permission granted
 
-//    work with the result of permission asking
+    //    work with the result of permission asking
     public void onRequestPermissionsResult(int requestCode, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
@@ -115,7 +115,7 @@ public class PermissionController {
                     // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         //Request location updates:
-                        if(provider != null){
+                        if (provider != null) {
                             locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
                         }
                     }

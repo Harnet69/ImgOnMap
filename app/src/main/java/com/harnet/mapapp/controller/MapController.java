@@ -20,7 +20,7 @@ public class MapController {
         // zoom the map between 1 and 20
         int mapScale = 12;
 
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cityCoord, mapScale));
     }
 
