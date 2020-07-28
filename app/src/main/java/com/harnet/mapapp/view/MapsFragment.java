@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -110,9 +111,10 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     System.out.println("Click");
-                    mapController.getAddresses(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                    if(mapController.getAddresses() != null && mapController.getAddresses().size() > 0){
-                        System.out.println(mapController.getAddresses().toString());
+//                    mapController.getAddresses(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                    if(mapController.getNearAddresses() != null && mapController.getNearAddresses().size() > 0){
+                        System.out.println(mapController.getNearAddresses().toString());
+                        Toast.makeText(getContext(), mapController.getNearAddresses().get(0).getAddressLine(0).toString(), Toast.LENGTH_LONG).show();
                     }
                 }
             });

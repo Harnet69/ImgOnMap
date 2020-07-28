@@ -32,7 +32,7 @@ public class MapController {
         geocoder = new Geocoder(context, Locale.getDefault());
     }
 
-    public List<Address> getAddresses() {
+    public List<Address> getNearAddresses() {
         return addresses;
     }
 
@@ -56,6 +56,8 @@ public class MapController {
         else {
             marker.setPosition(latLong);
         }
+
+        getAddresses(lat, lng);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLong));
         // Zoom in camera to a user location
