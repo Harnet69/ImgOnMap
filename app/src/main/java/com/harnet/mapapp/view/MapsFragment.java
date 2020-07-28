@@ -118,12 +118,6 @@ public class MapsFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        permissionController.onRequestPermissionsResult(requestCode, grantResults);
-//    }
-
     public interface OnMessageSendListener {
         public void onMessageSend(String message);
     }
