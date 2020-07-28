@@ -40,6 +40,8 @@ public class MapsFragment extends Fragment {
     private LocationListener locationListener;
     private String provider;
 
+    private Location lastKnownLocation;
+
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -61,9 +63,9 @@ public class MapsFragment extends Fragment {
 
             if (provider != null) {
                 Log.d("MapAppCheck", "onLocationChanged: Provider " + provider);
-                Location lastKnownLocation = locationManager.getLastKnownLocation(provider);
 
                 // set marker on last known location
+                lastKnownLocation = locationManager.getLastKnownLocation(provider);
                 if (lastKnownLocation != null) {
                     mapController.onPostExecute(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                 }
@@ -96,6 +98,24 @@ public class MapsFragment extends Fragment {
                 locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
             }
 
+//            addListenerToBtn(getActivity()){
+
+//            }
+
+            //TODO click must add to Adresses places near coordinates
+            // make 'where am I' button visible
+            View btnView = getActivity().findViewById(R.id.where_button);
+            btnView.setVisibility(View.VISIBLE);
+            btnView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("Click");
+                    mapController.getAddresses(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                    if(mapController.getAddresses() != null && mapController.getAddresses().size() > 0){
+                        System.out.println(mapController.getAddresses().toString());
+                    }
+                }
+            });
         }
     };
 
@@ -105,6 +125,22 @@ public class MapsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         permissionController = PermissionController.getInstance(getContext(), getActivity(), locationManager, locationListener, provider);
+
+//
+//        //TODO click must add to Adresses places near coordinates
+//        // make 'where am I' visible
+//        View btnView = getActivity().findViewById(R.id.where_button);
+//        btnView.setVisibility(View.VISIBLE);
+//        btnView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                System.out.println("Click");
+//                if(mapController.getAddresses() != null && mapController.getAddresses().size() > 0){
+//                    System.out.println(mapController.getAddresses().toString());
+//                }
+//            }
+//        });
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 

@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements MapsFragment.OnMe
                     .beginTransaction()
                     .replace(R.id.fragmentContFrameLayout, new MapsFragment())
                     .commit();
-            // make 'where am I' visible
-            findViewById(R.id.where_button).setVisibility(View.VISIBLE);
         }
     }
 }

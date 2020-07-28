@@ -32,11 +32,15 @@ public class MapController {
         geocoder = new Geocoder(context, Locale.getDefault());
     }
 
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
     public void setGoogleMap(LatLng cityCoord){
         // zoom the map between 1 and 20
         int mapScale = 12;
 
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cityCoord, mapScale));
     }
 
@@ -53,12 +57,6 @@ public class MapController {
             marker.setPosition(latLong);
         }
 
-        // get addresses from coordinates
-        getAddresses(lat, lng);
-        if(addresses != null && addresses.size() > 0){
-            Log.i("MapAppCheck", "Addresses on this coordinates: " + addresses.toString());
-        }
-
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLong));
         // Zoom in camera to a user location
 //        mMap.animateCamera(CameraUpdateFactory.zoomTo(16f));
@@ -66,13 +64,12 @@ public class MapController {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLong, 12));
     }
 
-    private void getAddresses(double lat, double lng){
+    // get information of near places
+    public void getAddresses(double lat, double lng){
         try {
             addresses = geocoder.getFromLocation(lat, lng, 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }
