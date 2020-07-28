@@ -31,7 +31,7 @@ import java.util.Objects;
 
 import static androidx.core.app.ActivityCompat.requestPermissions;
 
-public class MapsFragment extends Fragment  {
+public class MapsFragment extends Fragment {
     private OnMessageSendListener onMessageSendListener;
 
     private MapController mapController;
@@ -39,7 +39,6 @@ public class MapsFragment extends Fragment  {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private String provider;
-
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -50,7 +49,7 @@ public class MapsFragment extends Fragment  {
             googleMap.addMarker(new MarkerOptions().position(warsaw).title("Marker in Warsaw"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(warsaw));
             // set up the initial map
-            mapController = new MapController(googleMap);
+            mapController = new MapController(googleMap, getContext());
             mapController.setGoogleMap(warsaw);
 
             // check permissions
@@ -60,13 +59,14 @@ public class MapsFragment extends Fragment  {
             assert locationManager != null;
             provider = locationManager.getBestProvider(new Criteria(), false);
 
-            if(provider != null){
+            if (provider != null) {
                 Log.d("MapAppCheck", "onLocationChanged: Provider " + provider);
                 Location lastKnownLocation = locationManager.getLastKnownLocation(provider);
 
                 // set marker on last known location
-                assert lastKnownLocation != null;
-                mapController.onPostExecute(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                if (lastKnownLocation != null) {
+                    mapController.onPostExecute(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                }
             }
 
             locationListener = new LocationListener() {
@@ -92,7 +92,7 @@ public class MapsFragment extends Fragment  {
                 }
             };
             // update coordinates
-            if(provider != null) {
+            if (provider != null) {
                 locationManager.requestLocationUpdates(provider, 10000, 0, locationListener);
             }
 
@@ -135,7 +135,7 @@ public class MapsFragment extends Fragment  {
         try {
             onMessageSendListener = (OnMessageSendListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()+ "must implemented onMessageSend");
+            throw new ClassCastException(activity.toString() + "must implemented onMessageSend");
         }
     }
 }
